@@ -1,0 +1,42 @@
+.game-card {
+    width: 5rem;
+    text-align: center;
+    position: relative;
+    margin-right: 0.5rem;
+    min-height: 7.125rem;
+}
+
+.card-points-container {
+    position: relative;
+    text-align: center;
+    height: 5rem;
+}
+
+.sun-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80px;
+    width: auto;
+}
+
+.card-points {
+    position: relative;
+    z-index: 1;
+    font-size: 1.7em;
+    line-height: 80px;
+}
+
+.sun-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: auto;
+}
+
+.svg-icons {
+    transform: scale(2);
+}
