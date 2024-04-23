@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card as Muicard } from '@mui/material'
 import './Card.css'
 import sun from '../../assets/SunFrame3.webp'

@@ -1,0 +1,21 @@
+.ability-card-button {
+    margin: 5px;
+    min-width: 70px;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-button-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: auto;
+}
+
+.svg-icons {
+    transform: scale(2);
+}

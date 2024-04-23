@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :players, only: [] do
         member do
           post 'joined_game'
+          post 'change_leader_ability_status'
         end
       end
     end

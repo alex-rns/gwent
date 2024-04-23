@@ -1,27 +1,21 @@
-import React from 'react'
-import { useGame } from '../../contexts/GameContext.jsx';
-import Grid from '@mui/material/Grid'
+import { useGame } from '../../contexts/GameContext.jsx'
 import SideBar from '../SideBar/SideBar.jsx'
-import { Stack, Divider } from '@mui/material'
+import { Stack, Divider, Grid } from '@mui/material'
 import Row from '../Row/Row.jsx'
 import { gameService } from '../../features/gameService'
 import './Game.css'
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next'
 
 function Game() {
-  const { game, loading, setGame } = useGame();
-  const { t } = useTranslation();
+  const { game, loading, fetchGameState } = useGame()
+  const { t } = useTranslation()
 
   const handleResetGame = async (closeModal) => {
-    if (!window.confirm(t('resetGameConfirm'))) return;
-    try {
-      await gameService.resetGame()
-      const updatedGame = await gameService.fetchGameState()
-      setGame(updatedGame)
-      closeModal();
-    } catch (error) {
-      console.error('Failed to reset game:', error)
-    }
+    if (!window.confirm(t('resetGameConfirm'))) return
+
+    await gameService.resetGame()
+    fetchGameState()
+    closeModal()
   }
 
   if (loading) return <div>Loading...</div>
@@ -31,10 +25,7 @@ function Game() {
     <Grid container spacing={2} className="game-container">
       {game && (
         <Grid item xs={3} style={{ padding: '2rem' }}>
-          <SideBar
-            players={game.players}
-            handleResetGame={handleResetGame}
-          />
+          <SideBar players={game.players} handleResetGame={handleResetGame} />
         </Grid>
       )}
 
@@ -58,14 +49,14 @@ function Game() {
             .map((player) => (
               <Stack
                 key={player.id}
-                direction={player.id === 2 ? "column-reverse" : "column"}
+                direction={player.id === 2 ? 'column-reverse' : 'column'}
                 spacing={2}
                 style={{ height: '100%' }}
               >
                 {player.joined_game &&
-                  player.rows.sort((a, b) => a.id - b.id).map((row) => (
-                    <Row key={row.id} row={row} />
-                  ))}
+                  player.rows
+                    .sort((a, b) => a.id - b.id)
+                    .map((row) => <Row key={row.id} row={row} />)}
               </Stack>
             ))}
         </Stack>

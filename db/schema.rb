@@ -41,7 +41,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_214644) do
     t.boolean "joined_game", default: false
     t.string "faction"
     t.string "leader"
-    t.boolean "leader_ability_used", default: false
+    t.string "leader_ability"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_players_on_game_id"

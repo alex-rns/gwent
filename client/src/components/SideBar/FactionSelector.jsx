@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import factions from '../../utils/factions'
 import { useTranslation } from 'react-i18next'
-import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
+import {
+  InputLabel,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+} from '@mui/material'
 
 function FactionSelector({ player, onSelectFactionAndLeader }) {
   const [selectedFaction, setSelectedFaction] = useState('')

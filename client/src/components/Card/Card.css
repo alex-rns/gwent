@@ -27,16 +27,3 @@
     font-size: 1.7em;
     line-height: 80px;
 }
-
-.sun-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 30px;
-    width: auto;
-}
-
-.svg-icons {
-    transform: scale(2);
-}

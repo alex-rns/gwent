@@ -12,8 +12,8 @@ class Api::V1::RowsController < ApplicationController
   private
 
   def manage_weather_status
-    ManageWeatherEffectsService.new(params[:row_type]).call
-    if row.errors.empty?
+    result = ManageWeatherEffectsService.new(params[:row_type]).call
+    if result
       render json: { status: 'success', message: 'Weather has been set' }, status: :ok
     else
       render json: { status: 'error', message: 'Failed to set weather.' }, status: :unprocessable_entity
@@ -21,8 +21,8 @@ class Api::V1::RowsController < ApplicationController
   end
 
   def manage_effect
-    ManageRowEffectsService.new(@row, params[:effect], params[:isActive]).call
-    if row.errors.empty?
+    result = ManageRowEffectsService.new(@row, params[:effect], params[:isActive]).call
+    if result
       render json: { status: 'success', message: 'Effects have been set' }, status: :ok
     else
       render json: { status: 'error', message: 'Failed to set effects.' }, status: :unprocessable_entity

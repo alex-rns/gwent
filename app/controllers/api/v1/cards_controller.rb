@@ -3,12 +3,12 @@ class Api::V1::CardsController < ApplicationController
   before_action :set_row, only: %i[create]
 
   def create
-    @card = @row.cards.create!(card_params)
+    card = Cards::CreateCardOrganizer.perform(card_params:, row: @row)
 
-    if @card.save!
+    if card
       render json: { status: 'success' }, status: :ok
     else
-      render json: { status: 'error' }, status: :unprocessable_entity
+      render json: { status: 'error', message: card.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end
   end
 
@@ -16,7 +16,7 @@ class Api::V1::CardsController < ApplicationController
     if @card.update(card_params)
       render json: { status: 'success' }, status: :ok
     else
-      render json: { status: 'error' }, status: :unprocessable_entity
+      render json: { status: 'error', message: @card.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end
   end
 

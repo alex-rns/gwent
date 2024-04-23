@@ -36,3 +36,5 @@
 !/app/assets/builds/.keep
 /public/assets
 /.idea
+
+/config/credentials/production.key

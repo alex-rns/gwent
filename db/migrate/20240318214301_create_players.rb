@@ -9,7 +9,7 @@ class CreatePlayers < ActiveRecord::Migration[7.1]
       t.boolean :joined_game, default: false
       t.string :faction
       t.string :leader
-      t.boolean :leader_ability_used, default: false
+      t.string :leader_ability
 
       t.timestamps
     end

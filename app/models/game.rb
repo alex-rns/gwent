@@ -4,10 +4,10 @@ class Game < ApplicationRecord
 
   def reset_game
     players.each do |player|
-      player.update!(joined_game: false, faction: nil, leader: nil)
+      player.update!(joined_game: false, faction: nil, leader: nil, leader_ability: 'not_used', lives: 2)
       player.rows.each do |row|
         row.update!(weather: false, effect: nil)
-        # row.cards.destroy_all
+        row.cards.destroy_all
       end
     end
   end

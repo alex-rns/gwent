@@ -1,10 +1,5 @@
-import Button from '@mui/material/Button'
 import { useState } from 'react'
-import { Stack } from '@mui/material'
 import Item from '@mui/material/Grid'
-import Muicard from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
 import WeatherControl from './WeatherControl.jsx'
 import PlayerLives from './PlayerLives.jsx'
 import './SideBar.css'
@@ -13,9 +8,17 @@ import SettingsModal from './SettingsModal.jsx'
 import FactionSelector from './FactionSelector.jsx'
 import { gameService } from '../../features/gameService.js'
 import { useGame } from '../../contexts/GameContext.jsx'
+import LeaderAbilityButton from './LeaderAbilityButton.jsx'
+import {
+  Card as Muicard,
+  Typography,
+  Button,
+  Stack,
+  CardHeader,
+} from '@mui/material'
 
 function SideBar({ players, handleResetGame }) {
-  const { setGame } = useGame()
+  const { fetchGameState } = useGame()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const handleCloseModal = () => setIsModalOpen(false)
 
@@ -31,8 +34,7 @@ function SideBar({ players, handleResetGame }) {
 
   const handleJoinGame = async (playerId, faction, leader) => {
     await gameService.joinGame(playerId, faction, leader)
-    const updatedGame = await gameService.fetchGameState()
-    setGame(updatedGame)
+    fetchGameState()
   }
 
   return (
@@ -46,7 +48,7 @@ function SideBar({ players, handleResetGame }) {
       >
         <Item>
           <Muicard className="sidebar-card">
-            <CardHeader title={players[0].name} />
+            <CardHeader title={t(players[0].name)} />
             <PlayerLives player={players[0]} />
 
             {players[0].joined_game && (
@@ -60,6 +62,9 @@ function SideBar({ players, handleResetGame }) {
               />
             )}
           </Muicard>
+          {players[0].joined_game && (
+            <LeaderAbilityButton player={players[0]} />
+          )}
         </Item>
 
         <Stack direction="row" justifyContent="center" spacing={2}>
@@ -70,7 +75,7 @@ function SideBar({ players, handleResetGame }) {
 
         <Item>
           <Muicard className="sidebar-card">
-            <CardHeader title={players[1].name} />
+            <CardHeader title={t(players[1].name)} />
             <PlayerLives player={players[1]} />
             {players[1].joined_game && (
               <Typography variant="h2">{players[1].score}</Typography>
@@ -83,6 +88,9 @@ function SideBar({ players, handleResetGame }) {
               />
             )}
           </Muicard>
+          {players[1].joined_game && (
+            <LeaderAbilityButton player={players[1]} />
+          )}
         </Item>
       </Stack>
 

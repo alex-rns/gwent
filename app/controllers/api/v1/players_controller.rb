@@ -9,9 +9,21 @@ class Api::V1::PlayersController < ApplicationController
     end
   end
 
+  def change_leader_ability_status
+    player = Player.find(params[:id])
+    ability_applied = LeaderAbilityService.new(player).call
+
+    if ability_applied
+      player.update(leader_ability: params[:leader_ability])
+      render json: { status: 'success', message: 'Leader ability changed.' }, status: :ok
+    else
+      render json: { status: 'error', message: 'Failed to change leader ability.' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def player_params
-    params.permit(:id, :faction, :leader)
+    params.permit(:id, :faction, :leader, :leader_ability)
   end
 end

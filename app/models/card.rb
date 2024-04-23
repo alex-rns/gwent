@@ -13,6 +13,7 @@ class Card < ApplicationRecord
   }
 
   scope :not_hero, -> { where(is_hero: false) }
+  scope :with_tight_bond, ->(points) { where(original_points: points, abilities: :tight_bond) }
 
   private
 

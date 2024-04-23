@@ -1,33 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import { gameService } from '../../features/gameService';
-import { useGame } from "../../contexts/GameContext.jsx";
+import { useState, useEffect } from 'react'
+import { gameService } from '../../features/gameService'
+import { useGame } from '../../contexts/GameContext.jsx'
 import { ICONS } from '../../utils/icons'
 import sun from '../../assets/SunFrame3.webp'
-import Tooltip from '@mui/material/Tooltip';
-import { humanize } from '../../utils/stringUtils';
+import { humanize } from '../../utils/stringUtils'
+import { useTranslation } from 'react-i18next'
+import './CardModal.css'
+import {
+  Stack,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Tooltip,
+} from '@mui/material'
 
 function CardModal({ isOpen, onClose, rowId, cardData }) {
-  const { setGame } = useGame();
-  const [selectedPoints, setSelectedPoints] = useState(null);
-  const [selectedAbility, setSelectedAbility] = useState('');
-  const [isHero, setIsHero] = useState(false);
-
-  useEffect(() => {
-    if (cardData && cardData.points) {
-      setSelectedPoints(cardData.points);
-      setSelectedAbility(cardData.abilities);
-      setIsHero(cardData.is_hero);
-    } else {
-      setSelectedPoints(null);
-      setSelectedAbility('');
-      setIsHero(false);
-    }
-  }, [cardData]);
+  const { fetchGameState } = useGame()
+  const [selectedPoints, setSelectedPoints] = useState(null)
+  const [selectedAbility, setSelectedAbility] = useState('')
+  const [isHero, setIsHero] = useState(false)
+  const { t } = useTranslation()
 
   const handleSubmit = async () => {
     if (cardData) {
@@ -37,78 +32,122 @@ function CardModal({ isOpen, onClose, rowId, cardData }) {
         points: selectedPoints,
         abilities: selectedAbility,
         isHero: isHero,
-      });
+      })
     } else {
       await gameService.createCard({
         rowId,
         points: selectedPoints,
         abilities: selectedAbility,
         isHero: isHero,
-      });
+      })
     }
-    const updatedGame = await gameService.fetchGameState();
-    setGame(updatedGame);
-    onClose();
-  };
-
-  const handleDelete = async () => {
-    await gameService.deleteCard(cardData.id);
-    const updatedGame = await gameService.fetchGameState();
-    setGame(updatedGame);
-    onClose();
+    fetchGameState()
+    onClose()
   }
 
-  const modalTitle = cardData ? "Edit Card" : "Create a New Card";
+  const handleDelete = async () => {
+    await gameService.deleteCard(cardData.id)
+    fetchGameState()
+    onClose()
+  }
+
+  const modalTitle = cardData ? t('Edit Card') : t('Create a New Card')
+
+  useEffect(() => {
+    if (cardData && cardData.points) {
+      setSelectedPoints(cardData.points)
+      setSelectedAbility(cardData.abilities)
+      setIsHero(cardData.is_hero)
+    } else {
+      setSelectedPoints(null)
+      setSelectedAbility('')
+      setIsHero(false)
+    }
+  }, [cardData])
 
   return (
-    <Dialog fullWidth maxWidth="md" open={isOpen} onClose={onClose} aria-labelledby="card-modal-title">
-      <DialogTitle id="card-modal-title">{modalTitle}</DialogTitle>
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={isOpen}
+      onClose={onClose}
+      aria-labelledby="card-modal-title"
+    >
+      <DialogTitle sx={{ textAlign: 'center' }} id="card-modal-title">
+        {modalTitle}
+      </DialogTitle>
       <DialogContent>
-        <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
-          {Array.from({length: 16}, (_, i) => (
+        <Stack direction="row" justifyContent="center" flexWrap="wrap">
+          {Array.from({ length: 16 }, (_, i) => (
             <Button
               key={i}
-              variant={selectedPoints === i ? "contained" : "outlined"}
+              variant={selectedPoints === i ? 'contained' : 'outlined'}
               onClick={() => setSelectedPoints(i)}
-              sx={{m: 0.5, minWidth: '55px'}}
+              sx={{ m: 0.5, minWidth: '55px' }}
             >
               {i}
             </Button>
           ))}
-        </div>
-        <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem'}}>
-          <Tooltip title='Hero'>
+        </Stack>
+        <Box
+          sx={{
+            mt: 10,
+            display: 'flex',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Tooltip title={t('Hero Card')}>
             <Button
-              variant={isHero === true ? "contained" : "outlined"}
+              className={'ability-card-button'}
+              variant={isHero === true ? 'contained' : 'outlined'}
               onClick={() => setIsHero(isHero !== true)}
-              sx={{m: 5, minWidth: '70px', minHeight: '70px', alignItems: 'center', justifyContent: 'center'}}
             >
-              <img src={sun} className="sun-button" alt='sun-button'/>
+              <img
+                src={sun}
+                className="hero-button-img"
+                alt="hero-button-img"
+              />
             </Button>
           </Tooltip>
 
           {Object.entries(ICONS).map(([ability, Icon]) => (
-            <Tooltip title={humanize(ability)}>
+            <Tooltip key={ability} title={t(humanize(ability))}>
               <Button
                 key={ability}
-                variant={selectedAbility === ability ? "contained" : "outlined"}
-                onClick={() => setSelectedAbility(selectedAbility === ability ? '' : ability)}
-                sx={{m: 5, minWidth: '70px', minHeight: '70px', alignItems: 'center', justifyContent: 'center'}}
+                variant={selectedAbility === ability ? 'contained' : 'outlined'}
+                onClick={() =>
+                  setSelectedAbility(selectedAbility === ability ? '' : ability)
+                }
+                className={'ability-card-button'}
               >
-                <Icon className="svg-icons"/>
+                <Icon className="svg-icons" />
               </Button>
             </Tooltip>
           ))}
-        </div>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        {cardData && <Button onClick={handleDelete} color="error">Delete</Button>}
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit}
-                disabled={selectedPoints === null}>{cardData ? "Update Card" : "Create Card"}</Button>
+      <DialogActions
+        sx={{ justifyContent: cardData ? 'space-between' : 'flex-end' }}
+      >
+        {cardData && (
+          <Button onClick={handleDelete} color="error">
+            {t('Delete Card')}
+          </Button>
+        )}
+        <div>
+          <Button onClick={onClose}>{t('Cancel')}</Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={selectedPoints === null}
+            variant="contained"
+          >
+            {cardData ? t('Update Card') : t('Create Card')}
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default CardModal;
+export default CardModal

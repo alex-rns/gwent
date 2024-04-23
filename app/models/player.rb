@@ -13,8 +13,14 @@ class Player < ApplicationRecord
 
   enum faction: FACTION_LEADERS.keys.index_by(&:to_s)
 
+  enum leader_ability: { not_used: 'not_used', used: 'used', blocked: 'blocked' }
+
   def recalculate_score!
     new_score = cards.sum(:points)
     update(score: new_score)
+  end
+
+  def opponent
+    game.players.where.not(id: id).first
   end
 end
