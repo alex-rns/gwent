@@ -79,6 +79,5 @@ test:
 #
 production:
   <<: *default
-  database: gweent_production
-  username: gweent
-  password: <%= ENV["GWEENT_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+
