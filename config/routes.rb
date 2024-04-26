@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :games, only: %i[show create update] do
         member do
           post 'reset_game'
+          post 'end_the_match'
         end
       end
       resources :players, only: [] do

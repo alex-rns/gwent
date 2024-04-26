@@ -6,16 +6,24 @@ function SettingsModal({ isOpen, onClose, changeLanguage, handleResetGame }) {
 
   return (
     <Dialog open={isOpen} onClose={onClose} aria-labelledby="card-modal-title">
-      <DialogContent sx={{ textAlign: 'center' }}>
-        <Stack sx={{ marginBottom: '1rem' }}>
+      <DialogContent sx={{ textAlign: 'center', m: '2rem' }}>
+        <Stack sx={{ marginBottom: '2rem' }}>
           <Button variant="contained" onClick={handleResetGame}>
             {t('Reset game')}
           </Button>
         </Stack>
-        <Button variant="contained" onClick={() => changeLanguage('en')}>
+        <Button
+          sx={{ mr: '1rem', minWidth: '7rem' }}
+          variant="contained"
+          onClick={() => changeLanguage('en')}
+        >
           EN
         </Button>
-        <Button variant="contained" onClick={() => changeLanguage('ua')}>
+        <Button
+          sx={{ ml: '1rem', minWidth: '7rem' }}
+          variant="contained"
+          onClick={() => changeLanguage('ua')}
+        >
           UA
         </Button>
       </DialogContent>

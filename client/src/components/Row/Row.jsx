@@ -4,6 +4,7 @@ import './Row.css'
 import RowEffects from './RowEffects.jsx'
 import CardModal from '../Card/CardModal.jsx'
 import Button from '@mui/material/Button'
+import Slide from '@mui/material/Slide'
 
 function Row({ row }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -22,13 +23,23 @@ function Row({ row }) {
   const handleCloseModal = () => setIsModalOpen(false)
 
   return (
-    <div className={`row ${row.weather ? 'row-weather-on' : ''}`}>
+    <div
+      className={`row ${row.weather ? `row-weather-on row-weather-${row.row_type}` : ''}`}
+    >
       <RowEffects rowId={row.id} />
       {row.cards &&
         row.cards.map((card) => (
-          <Card key={card.id} card={card} onEdit={handleOpenModalForEdit} />
+          <Slide direction="up" in={true} key={card.id}>
+            <div>
+              <Card card={card} onEdit={handleOpenModalForEdit} />
+            </div>
+          </Slide>
         ))}
-      <Button variant="contained" onClick={handleOpenModalForNewCard}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenModalForNewCard}
+      >
         +
       </Button>
       {isModalOpen && (

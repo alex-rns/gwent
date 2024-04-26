@@ -24,6 +24,6 @@ class Api::V1::PlayersController < ApplicationController
   private
 
   def player_params
-    params.permit(:id, :faction, :leader, :leader_ability)
+    params.require(:player).permit(:id, :faction, :leader, :leader_ability)
   end
 end

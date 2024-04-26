@@ -16,11 +16,17 @@ import {
   Stack,
   CardHeader,
 } from '@mui/material'
+import { humanize } from '../../utils/stringUtils.js'
+import FactionIcon from './FactionIcon.jsx'
+import ResultsModal from '../Game/ResultsModal.jsx'
 
 function SideBar({ players, handleResetGame }) {
   const { fetchGameState } = useGame()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const handleCloseModal = () => setIsModalOpen(false)
+
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false)
+  const [result, setResult] = useState()
 
   const handleOpenModal = () => {
     setIsModalOpen(true)
@@ -37,8 +43,26 @@ function SideBar({ players, handleResetGame }) {
     fetchGameState()
   }
 
+  const handleEndTheMatch = async () => {
+    if (!window.confirm(t('endTheMatch'))) return
+
+    const response = await gameService.endTheMatch()
+    if (response) {
+      setResult(response)
+      setIsResultsModalOpen(true)
+    }
+    fetchGameState()
+  }
+
   return (
     <>
+      {isResultsModalOpen && (
+        <ResultsModal
+          isOpen={isResultsModalOpen}
+          onClose={() => setIsResultsModalOpen(false)}
+          result={result}
+        />
+      )}
       <Stack
         direction="column"
         justifyContent="space-around"
@@ -47,7 +71,13 @@ function SideBar({ players, handleResetGame }) {
         style={{ height: '100%' }}
       >
         <Item>
-          <Muicard className="sidebar-card">
+          <Muicard
+            sx={{ paddingBottom: 1, position: 'relative' }}
+            className="sidebar-card"
+          >
+            {players[0].joined_game && (
+              <FactionIcon faction={players[0].faction} asBackground="true" />
+            )}
             <CardHeader title={t(players[0].name)} />
             <PlayerLives player={players[0]} />
 
@@ -61,20 +91,46 @@ function SideBar({ players, handleResetGame }) {
                 onSelectFactionAndLeader={handleJoinGame}
               />
             )}
+            {players[0].joined_game && (
+              <Typography variant="caption">
+                {t(humanize(players[0].leader))}
+              </Typography>
+            )}
           </Muicard>
           {players[0].joined_game && (
             <LeaderAbilityButton player={players[0]} />
           )}
         </Item>
-
-        <Stack direction="row" justifyContent="center" spacing={2}>
-          <WeatherControl rowType="front" />
-          <WeatherControl rowType="middle" />
-          <WeatherControl rowType="back" />
-        </Stack>
+        <Item>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            sx={{ mb: '1rem' }}
+          >
+            <WeatherControl rowType="front" />
+            <WeatherControl rowType="middle" />
+            <WeatherControl rowType="back" />
+          </Stack>
+          <Stack>
+            <Button
+              variant="contained"
+              onClick={handleEndTheMatch}
+              disabled={!players.every((player) => player.joined_game)}
+            >
+              {t('End the match')}
+            </Button>
+          </Stack>
+        </Item>
 
         <Item>
-          <Muicard className="sidebar-card">
+          <Muicard
+            sx={{ paddingBottom: 1, position: 'relative' }}
+            className="sidebar-card"
+          >
+            {players[1].joined_game && (
+              <FactionIcon faction={players[1].faction} asBackground="true" />
+            )}
             <CardHeader title={t(players[1].name)} />
             <PlayerLives player={players[1]} />
             {players[1].joined_game && (
@@ -87,16 +143,26 @@ function SideBar({ players, handleResetGame }) {
                 onSelectFactionAndLeader={handleJoinGame}
               />
             )}
+            {players[0].joined_game && (
+              <Typography variant="caption">
+                {t(humanize(players[1].leader))}
+              </Typography>
+            )}
           </Muicard>
           {players[1].joined_game && (
             <LeaderAbilityButton player={players[1]} />
           )}
         </Item>
       </Stack>
-
-      <Button variant="contained" onClick={handleOpenModal}>
-        {t('Settings')}
-      </Button>
+      <Stack>
+        <Button
+          sx={{ textAlign: 'center' }}
+          variant="contained"
+          onClick={handleOpenModal}
+        >
+          {t('Settings')}
+        </Button>
+      </Stack>
 
       {isModalOpen && (
         <SettingsModal

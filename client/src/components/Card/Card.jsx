@@ -8,7 +8,7 @@ function Card({ card, onEdit }) {
 
   return (
     <Muicard
-      variant="outlined"
+      sx={{ boxShadow: 10 }}
       className="game-card"
       onClick={() => onEdit(card)}
     >

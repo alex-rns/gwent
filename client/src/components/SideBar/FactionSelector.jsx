@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGame } from '../../contexts/GameContext'
 import factions from '../../utils/factions'
 import { useTranslation } from 'react-i18next'
 import {
@@ -8,15 +9,21 @@ import {
   MenuItem,
   FormControl,
 } from '@mui/material'
+import FactionIcon from './FactionIcon'
 
 function FactionSelector({ player, onSelectFactionAndLeader }) {
   const [selectedFaction, setSelectedFaction] = useState('')
   const [selectedLeader, setSelectedLeader] = useState('')
   const { t } = useTranslation()
+  const { game } = useGame()
 
   const handleSelect = () => {
     onSelectFactionAndLeader(player.id, selectedFaction, selectedLeader)
   }
+
+  const availableFactions = factions.filter((faction) => {
+    return !game.players.some((p) => p.faction === faction.slug)
+  })
 
   return (
     <div>
@@ -29,8 +36,9 @@ function FactionSelector({ player, onSelectFactionAndLeader }) {
           label={t('Select Faction')}
           onChange={(e) => setSelectedFaction(e.target.value)}
         >
-          {factions.map((faction) => (
+          {availableFactions.map((faction) => (
             <MenuItem key={faction.slug} value={faction.slug}>
+              <FactionIcon faction={faction.slug} />
               {t(faction.name)}
             </MenuItem>
           ))}

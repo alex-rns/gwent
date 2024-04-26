@@ -17,7 +17,7 @@ function LeaderAbilityButton({ player }) {
       return
     }
 
-    let status = 'not_used'
+    let status = 'unused'
     if (!isUsed && !isBlocked) {
       status = 'used'
     } else if (isBlocked) {

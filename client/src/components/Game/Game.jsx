@@ -40,7 +40,7 @@ function Game() {
             <Divider
               orientation="horizontal"
               flexItem
-              sx={{ bgcolor: 'secondary.light' }}
+              sx={{ bgcolor: 'white' }}
             />
           }
         >

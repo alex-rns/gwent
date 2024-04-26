@@ -24,7 +24,12 @@ function RowEffects({ rowId }) {
   }, [game.players, rowId])
 
   return (
-    <Stack direction="column" justifyContent="center" spacing={2}>
+    <Stack
+      direction="column"
+      justifyContent="center"
+      spacing={2}
+      sx={{ mx: '2rem' }}
+    >
       <Button
         variant="contained"
         color={effectActivated === 'horn' ? 'secondary' : 'primary'}

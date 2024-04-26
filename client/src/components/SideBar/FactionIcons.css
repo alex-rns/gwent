@@ -1,0 +1,40 @@
+.faction-icon {
+    width: 40px;
+    height: 40px;
+    background-size: 40px 40px;
+    margin-right: 1rem;
+}
+
+.faction-icon-bg {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.icon-northern_realms {
+    background-image: url('./../../assets/faction-northern-realms.png');
+}
+
+.icon-nilfgaard {
+    background-image: url('./../../assets/faction-nilfgaard.png');
+}
+
+.icon-skellige {
+    background-image: url('./../../assets/faction-skellige.png');
+}
+
+.icon-monsters {
+    background-image: url('./../../assets/faction-monsters.png');
+}
+
+.icon-scoiatael {
+    background-image: url('./../../assets/faction-scoiatael.png');
+}

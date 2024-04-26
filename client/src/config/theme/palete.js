@@ -1,4 +1,4 @@
-import createPalette from "@mui/material/styles/createPalette";
+import createPalette from '@mui/material/styles/createPalette'
 
 export const defaultPalette = createPalette({
   common: {
@@ -9,7 +9,7 @@ export const defaultPalette = createPalette({
     main: '#212121',
   },
   secondary: {
-    main: '#BDBDBD',
+    main: '#26a51f',
   },
   teal: {
     main: '#a9e0df',
@@ -27,5 +27,5 @@ export const defaultPalette = createPalette({
   },
   hover: {
     main: '#e3e3e366',
-  }
+  },
 })

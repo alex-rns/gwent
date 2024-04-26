@@ -6,5 +6,17 @@
 }
 
 .row-weather-on {
-    background-color: blue;
+    background-size: cover;
+}
+
+.row-weather-front {
+    background-image: url('./../../assets/frost-bg.png');
+}
+
+.row-weather-middle {
+    background-image: url('./../../assets/fog-bg.png');
+}
+
+.row-weather-back {
+    background-image: url('./../../assets/rain-bg.png');
 }

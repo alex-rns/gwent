@@ -14,8 +14,8 @@ export const gameService = {
       method: 'POST',
       body: JSON.stringify({ faction, leader }),
     }),
-  resetGame: (gameId) =>
-    fetchAPI(`${API_URL}/api/v1/games/${gameId}/reset_game`, {
+  resetGame: () =>
+    fetchAPI(`${API_URL}/api/v1/games/1/reset_game`, {
       method: 'POST',
     }),
   changeWeather: (rowType) =>
@@ -28,7 +28,7 @@ export const gameService = {
       method: 'POST',
       body: JSON.stringify({ effect }),
     }),
-  createCard: async (cardData) => {
+  createCard: (cardData) => {
     const { rowId, isHero, points, abilities } = cardData
     return fetchAPI(`${API_URL}/api/v1/cards`, {
       method: 'POST',
@@ -40,7 +40,7 @@ export const gameService = {
       }),
     })
   },
-  updateCard: async (cardData) => {
+  updateCard: (cardData) => {
     const { cardId, rowId, isHero, points, abilities } = cardData
     return fetchAPI(`${API_URL}/api/v1/cards/${cardId}`, {
       method: 'PATCH',
@@ -52,11 +52,11 @@ export const gameService = {
       }),
     })
   },
-  deleteCard: async (cardId) =>
+  deleteCard: (cardId) =>
     fetchAPI(`${API_URL}/api/v1/cards/${cardId}`, {
       method: 'DELETE',
     }),
-  applyLeaderAbility: async (playerId, status) =>
+  applyLeaderAbility: (playerId, status) =>
     fetchAPI(
       `${API_URL}/api/v1/players/${playerId}/change_leader_ability_status`,
       {
@@ -64,4 +64,8 @@ export const gameService = {
         body: JSON.stringify({ leader_ability: status }),
       },
     ),
+  endTheMatch: () =>
+    fetchAPI(`${API_URL}/api/v1/games/1/end_the_match`, {
+      method: 'POST',
+    }),
 }

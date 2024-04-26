@@ -3,17 +3,7 @@ class Player < ApplicationRecord
   has_many :rows
   has_many :cards, through: :rows
 
-  FACTION_LEADERS = {
-    northern_realms: %w[king_of_temeria the_siegemaster the_steel_forged son_of_medell lord_commander_of_the_north],
-    nilfgaard: %w[emperor_of_nilfgaard his_imperial_majesty invader_of_the_north the_relentless the_white_flame]
-    # scoia_tael: ['Filavandrel', 'Francesca Findabair', 'Brouver Hoog', 'Eithné', 'Gabor Zigrin'],
-    # monsters: ['Eredin', 'Dagon', 'Unseen Elder', 'Woodland Spirit', 'Caranthir'],
-    # skellige: ['Crach an Craite', 'Eist Tuirseach', 'Harald the Cripple', 'Bran Tuirseach', 'Svanrige Tuirseach']
-  }.freeze
-
-  enum faction: FACTION_LEADERS.keys.index_by(&:to_s)
-
-  enum leader_ability: { not_used: 'not_used', used: 'used', blocked: 'blocked' }
+  enum leader_ability: { unused: 'unused', used: 'used', blocked: 'blocked' }
 
   def recalculate_score!
     new_score = cards.sum(:points)
@@ -22,5 +12,21 @@ class Player < ApplicationRecord
 
   def opponent
     game.players.where.not(id: id).first
+  end
+
+  def reset_state!(fully)
+    update!(joined_game: false, faction: nil, leader: nil, leader_ability: 'unused', lives: 2) if fully
+    rows.each do |row|
+      row.update!(weather: false, effect: nil)
+      row.cards.destroy_all
+    end
+  end
+
+  def zero_lives?
+    lives.zero?
+  end
+
+  def alive?
+    lives.positive?
   end
 end

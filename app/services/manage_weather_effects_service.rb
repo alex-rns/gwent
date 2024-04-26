@@ -21,6 +21,8 @@ class ManageWeatherEffectsService
   def activate_weather_effect(row)
     card_effect = row.cards.any? { |card| card.abilities == 'horn' }
     horn_coefficient = row.effect == 'horn' || card_effect ? 2 : 1
+    bran_king = row.player.leader == 'bran_king'
+    horn_coefficient = 0.5 if bran_king
 
     tight_bond_points = calculate_tight_bond_points(row)
 
@@ -31,14 +33,14 @@ class ManageWeatherEffectsService
         if card.original_points == 2
           card.update(points: row.effect == 'horn' ? 2 : 1)
         else
-          card.update(points: 1)
+          bran_king ? card.update(points: card.points / 2) :  card.update(points: 1)
         end
       else
-        card.update(points: horn_coefficient)
+        bran_king ? card.update(points: (card.points * horn_coefficient)) :  card.update(points: 1)
       end
     end
     row.reload
-    # Cards::ApplyMoraleBoostAbility.new(row: row).perform
+    reapply_morale_boost(row)
   end
 
   def deactivate_weather_effect(row)
@@ -63,8 +65,7 @@ class ManageWeatherEffectsService
       end
     end
     row.reload
-    # Cards::ApplyMoraleBoostAbility.new(row: row).perform
-
+    reapply_morale_boost(row)
   end
 
   def calculate_tight_bond_points(row)
@@ -74,5 +75,22 @@ class ManageWeatherEffectsService
       tight_bond_points[original_points] = (count == 2 ? 2 : (count == 3 ? 3 : 1))
     end
     tight_bond_points
+  end
+
+  def reapply_morale_boost(row)
+    existing_morale_boost_cards = row.cards.where(abilities: 'morale_boost').count
+    row.cards.not_hero.each do |card|
+      if card&.abilities&.include?('morale_boost')
+        next if existing_morale_boost_cards == 1
+        # when deactivate weather
+        card.update(points: existing_morale_boost_cards) unless row.weather
+
+        # when deactivate weather
+        card.update(points: card.points + existing_morale_boost_cards -1 ) if row.weather
+      else
+
+        card.update(points: card.points + existing_morale_boost_cards)
+      end
+    end
   end
 end
