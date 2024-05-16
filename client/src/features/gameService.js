@@ -5,7 +5,10 @@ const fetchAPI = async (url, options) => {
     ...options,
     headers: { 'Content-Type': 'application/json' },
   })
-  return await response.json()
+  const data = await response.json()
+  return response.ok
+    ? data
+    : Promise.reject(data.message || 'An error occurred')
 }
 
 export const gameService = {

@@ -3,19 +3,23 @@ import SideBar from '../SideBar/SideBar.jsx'
 import { Stack, Divider, Grid } from '@mui/material'
 import Row from '../Row/Row.jsx'
 import { gameService } from '../../features/gameService'
+import { useSnackbar } from '../../contexts/SnackbarContext.jsx'
 import './Game.css'
 import { useTranslation } from 'react-i18next'
 
 function Game() {
   const { game, loading, fetchGameState } = useGame()
   const { t } = useTranslation()
+  const { showSnackbar } = useSnackbar()
 
   const handleResetGame = async (closeModal) => {
     if (!window.confirm(t('resetGameConfirm'))) return
 
-    await gameService.resetGame()
-    fetchGameState()
-    closeModal()
+    gameService.resetGame().then((response) => {
+      fetchGameState()
+      closeModal()
+      showSnackbar(t(response.message), 'success')
+    })
   }
 
   if (loading) return <div>Loading...</div>

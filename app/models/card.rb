@@ -13,9 +13,22 @@ class Card < ApplicationRecord
   }
 
   scope :not_hero, -> { where(is_hero: false) }
-  scope :with_tight_bond, ->(points) { where(original_points: points, abilities: :tight_bond) }
+
+  def cow?
+    decoy_ability? && row.player.faction != 'skellige'
+  end
+
+  def kambi?
+    decoy_ability? && row.player.faction == 'skellige'
+  end
 
   private
+
+  scope :with_tight_bond, ->(points) { where(original_points: points, abilities: :tight_bond) }
+
+  def decoy_ability?
+    abilities == 'decoy' && points != 8
+  end
 
   def recalculate_player_score
     row.player.recalculate_score!

@@ -18,7 +18,16 @@ class Player < ApplicationRecord
     update!(joined_game: false, faction: nil, leader: nil, leader_ability: 'unused', lives: 2) if fully
     rows.each do |row|
       row.update!(weather: false, effect: nil)
-      row.cards.destroy_all
+      row.cards.each do |card|
+        decoy_points = if card.kambi?
+                         11
+                        elsif card.cow?
+                          8
+                        else
+                          card.original_points
+                        end
+        ((card.kambi? || card.cow?) && !fully) ? card.update!(points: decoy_points,  original_points: decoy_points, is_hero: card.kambi?) : card.destroy
+      end
     end
   end
 

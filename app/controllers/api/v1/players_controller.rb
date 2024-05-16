@@ -3,7 +3,7 @@ class Api::V1::PlayersController < ApplicationController
     player = Player.find(params[:id])
 
     if player.update(player_params.merge(joined_game: true))
-      render json: { status: 'success', message: 'Player joined the game.' }, status: :ok
+      render json: { status: 'success', message: "#{player.name} joined the game." }, status: :ok
     else
       render json: { status: 'error', message: 'Failed to join the game.' }, status: :unprocessable_entity
     end

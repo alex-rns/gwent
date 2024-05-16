@@ -13,16 +13,9 @@ function LeaderAbilityButton({ player }) {
   )
 
   const handleApplyLeaderAbility = async () => {
-    if (isUsed || isBlocked) {
-      return
-    }
+    if (isUsed || isBlocked) return
 
-    let status = 'unused'
-    if (!isUsed && !isBlocked) {
-      status = 'used'
-    } else if (isBlocked) {
-      status = 'blocked'
-    }
+    const status = isBlocked ? 'blocked' : 'used'
 
     await gameService.applyLeaderAbility(player.id, status)
     fetchGameState()

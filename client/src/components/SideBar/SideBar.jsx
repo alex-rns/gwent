@@ -9,6 +9,7 @@ import FactionSelector from './FactionSelector.jsx'
 import { gameService } from '../../features/gameService.js'
 import { useGame } from '../../contexts/GameContext.jsx'
 import LeaderAbilityButton from './LeaderAbilityButton.jsx'
+import { useSnackbar } from '../../contexts/SnackbarContext.jsx'
 import {
   Card as Muicard,
   Typography,
@@ -27,6 +28,7 @@ function SideBar({ players, handleResetGame }) {
 
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false)
   const [result, setResult] = useState()
+  const { showSnackbar } = useSnackbar()
 
   const handleOpenModal = () => {
     setIsModalOpen(true)
@@ -39,8 +41,10 @@ function SideBar({ players, handleResetGame }) {
   }
 
   const handleJoinGame = async (playerId, faction, leader) => {
-    await gameService.joinGame(playerId, faction, leader)
-    fetchGameState()
+    await gameService.joinGame(playerId, faction, leader).then((response) => {
+      fetchGameState()
+      showSnackbar(response.message, response.status)
+    })
   }
 
   const handleEndTheMatch = async () => {
@@ -60,7 +64,8 @@ function SideBar({ players, handleResetGame }) {
         <ResultsModal
           isOpen={isResultsModalOpen}
           onClose={() => setIsResultsModalOpen(false)}
-          result={result}
+          result={result.result}
+          notices={result.notices}
         />
       )}
       <Stack
@@ -75,6 +80,11 @@ function SideBar({ players, handleResetGame }) {
             sx={{ paddingBottom: 1, position: 'relative' }}
             className="sidebar-card"
           >
+            {players[0].joined_game && (
+              <Typography variant="caption">
+                {t(humanize(players[0].faction))}
+              </Typography>
+            )}
             {players[0].joined_game && (
               <FactionIcon faction={players[0].faction} asBackground="true" />
             )}
@@ -128,6 +138,11 @@ function SideBar({ players, handleResetGame }) {
             sx={{ paddingBottom: 1, position: 'relative' }}
             className="sidebar-card"
           >
+            {players[1].joined_game && (
+              <Typography variant="caption">
+                {t(humanize(players[1].faction))}
+              </Typography>
+            )}
             {players[1].joined_game && (
               <FactionIcon faction={players[1].faction} asBackground="true" />
             )}
