@@ -26,7 +26,7 @@ module Cards
       when 'young_berserker'
         apply_young_berserker_ability
       else
-        #
+        ##
       end
     end
 
